@@ -1,6 +1,7 @@
 # get the sfa profiles from excel sheet 
 library(readxl)
 library(tidyverse)
+library(dplyr)
 
 profiles <- read_excel("./data/SFA_profile_Feb_2019.xls", 
                        col_types = c("text", "text", "text","logical", 
@@ -29,6 +30,7 @@ profiles <- read_excel("./data/SFA_profile_Feb_2019.xls",
   mutate(sfa_name_short10 = substr(sfa_name, 1, 10))
 
 # The above actually takes the raw excel into a semi-usable dataframe
+profiles <- filter(profiles, Profile == "Public")
 
 
 #profiles <- mutate(profiles, "prog_opportunity" = if (count))
