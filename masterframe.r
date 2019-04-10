@@ -16,6 +16,7 @@ http://www.cde.state.co.us/cdereval/rvprioryearpmdata
 # Urban or Rural = either by zip code tabulation areas or census tract choose one then do it
 https://www.ers.usda.gov/data-products/frontier-and-remote-area-codes/frontier-and-remote-area-codes/#2010%20Frontier%20and%20Remote%20Area%20Codes%20Data%20Files
   https://www.ers.usda.gov/data-products/rural-urban-commuting-area-codes.aspx
+# Rural/Urban was also provided in the profiles somewhere.  
 # CEP = from the CEP file ISP, Eligible, Near Eligibile, Participating, total schools CEP, total student enrollment CEP
 CEP Annual Notification
 # Meal Count = for each program area total ADP for the year
