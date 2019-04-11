@@ -6,7 +6,7 @@ library(stringr)
 
 # Get the CDE provided spreadsheet into R
 
-profiles <- read_excel("./data/SFA_profile_Feb_2019.xls", 
+profiles <- read_excel("./data/blueprint_designed/SFA_profile_Feb_2019.xls", 
                        col_types = c("text", "text", "text","logical", 
                                      "numeric","numeric", "numeric", "logical",
                                      "logical", "logical", 
