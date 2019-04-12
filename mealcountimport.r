@@ -55,8 +55,8 @@ district_meal_count <- mutate(huge_meal_count,
                                                       side = "left", pad = "0"),
                               claim_year = year(claim_date),
                               claim_month = month(claim_date),
-                              school_year = year(district_meal_count$claim_date) + 
-                                (month(district_meal_count$claim_date) <= 7)
+                              school_year = year(claim_date) + 
+                                (month(claim_date) <= 7)
                               )
 
 
@@ -77,10 +77,6 @@ by_district <- group_by(district_meal_count,
 
 ggplot(data = by_district) +
   geom_point(mapping=aes(x = claim_month, y = adp_average), position = "jitter")
-
-range(by_month$adp_average)
-count(is.na(by_month$school_year))
-summarize(district_meal_count, )
 
 na_count <-sapply(by_month, function(y) sum(length(which(is.na(y)))))
 na_count <- data.frame(na_count)

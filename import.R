@@ -54,10 +54,12 @@ site_all <- group_by(site_all,
 # Combines districts with GEOID number
 geoid_districts <- left_join(districts, profiles, by = "CDE_AGREEMENT")
 
+
+source("./mapping.r")
 ### This WORKS!!
 combined_geo_dist <- left_join(co_school_joined, geoid_districts, by = "GEOID")
 
-plot(combined_geo_dist["nslp"], main = "NSLP Updated", key.pos = 3, type = "b" )
+plot(combined_geo_dist["nslp"], main = "NSLP Updated", key.pos = 3 )
 plot(combined_geo_dist["sfsp"], main = "SFSP 2018")
 
 # I am thinking that there is something to do with how the df is getting merged 
