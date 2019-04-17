@@ -4,17 +4,19 @@
 
 # import.r
 # mapping.r
-# mealcount.r
+# mealcount.rwar
 # four_day.r
 # mealcountimport.r
 
 library(tidyverse)
+library(proto)
 library(gsubfn)
 library(readxl)
 library(dplyr)
 library(stringr)
 library(lubridate)
 library(tigris)
+library(reticulate)
 library(RQGIS)
 library(tidycensus)
 library(sf)
@@ -24,6 +26,60 @@ library(forcats)
 
 
 
+# From mapping.r
+
+
+
+
+
+# Messing around with guidance from Data Camp
+# https://s3.amazonaws.com/assets.datacamp.com/production/course_6839/slides/chapter4.pdf
+
+
+# 
+# library(tigris)
+# library(RQGIS)
+# library(tidycensus)
+# library(sf)
+# library(dplyr)
+# library(lwgeom)
+# library(stringr)
+options(tigris_class = "sf")
+tigris_use_cache = TRUE
+apikey <- "69d8405e34b271517d234dcd4689e8df75836eff"
+
+
+colorado_income <- get_acs(geography = "school district (unified)",
+                           variables = "B19013_001",
+                           state = "CO", key = apikey)
+
+colorado_school <- school_districts(state = "CO",
+                                    type = "unified",
+                                    class = "sf")
+
+co_school_joined <- left_join(colorado_school,
+                              colorado_income,
+                              by = "GEOID")
+
+
+# Plot out using GIS all the different SFAs with whatever data we want to show
+
+
+
+#plot(super_df["free_perc"], main="Percentage Free Students")
+#plot(super_df["redu_perc"], main= "Percentage Reduced Students")
+#plot(super_df["free_and_red_perc"], main= "Percentage Free or Reduced")
+#plot(super_df["sbp"], main= "Has School Breakfast Program")
+#plot(super_df["day4"], main= "Has 4 day school week")
+#plot(super_df["sfsp"], main = "Has sfsp")
+#plot(super_df["smp"], main = "Has Special Milk Progam")
+#plot(super_df["nslp"], main = "Has NSLP")
+#plot(super_df["snack"], main= "Has Afterschool Snack Program")
+#plot(super_df["student_count"], main= "Number of Students")
+
+# What I need to work on is taking the names apart and trying to match them automatically
+# Create a new variable in profiles from the geoID so that all the districts match
+
 
 
 
@@ -32,10 +88,10 @@ library(forcats)
 # From import.r
 
 # get the sfa profiles from excel sheet 
-library(readxl)
-library(tidyverse)
-library(dplyr)
-library(stringr)
+# library(readxl)
+# library(tidyverse)
+# library(dplyr)
+# library(stringr)
 
 # Get the CDE provided spreadsheet into R
 
@@ -88,7 +144,8 @@ site_all <- group_by(site_all,
 geoid_districts <- left_join(districts, profiles, by = "CDE_AGREEMENT")
 
 
-source("./mapping.r")
+
+
 ### This WORKS!!
 combined_geo_dist <- left_join(co_school_joined, geoid_districts, by = "GEOID")
 
@@ -102,64 +159,6 @@ plot(combined_geo_dist["sfsp"], main = "SFSP 2018")
 #---------------------------------------------------------------
 
   
-  
-  
-# From mapping.r
-  
-  
-  
-  
-  
-# Messing around with guidance from Data Camp
-# https://s3.amazonaws.com/assets.datacamp.com/production/course_6839/slides/chapter4.pdf
-
-
-
-library(tigris)
-library(RQGIS)
-library(tidycensus)
-library(sf)
-library(dplyr)
-library(lwgeom)
-library(stringr)
-options(tigris_class = "sf")
-tigris_use_cache = TRUE
-apikey <- "69d8405e34b271517d234dcd4689e8df75836eff"
-
-
-colorado_income <- get_acs(geography = "school district (unified)",
-                           variables = "B19013_001",
-                           state = "CO", key = apikey)
-
-colorado_school <- school_districts(state = "CO",
-                                    type = "unified",
-                                    class = "sf")
-
-co_school_joined <- left_join(colorado_school,
-                              colorado_income,
-                              by = "GEOID")
-
-
-# Plot out using GIS all the different SFAs with whatever data we want to show
-
-
-
-#plot(super_df["free_perc"], main="Percentage Free Students")
-#plot(super_df["redu_perc"], main= "Percentage Reduced Students")
-#plot(super_df["free_and_red_perc"], main= "Percentage Free or Reduced")
-#plot(super_df["sbp"], main= "Has School Breakfast Program")
-#plot(super_df["day4"], main= "Has 4 day school week")
-#plot(super_df["sfsp"], main = "Has sfsp")
-#plot(super_df["smp"], main = "Has Special Milk Progam")
-#plot(super_df["nslp"], main = "Has NSLP")
-#plot(super_df["snack"], main= "Has Afterschool Snack Program")
-#plot(super_df["student_count"], main= "Number of Students")
-
-# What I need to work on is taking the names apart and trying to match them automatically
-# Create a new variable in profiles from the geoID so that all the districts match
-
-
-
 
 
 #-----------------------------------------------------------
@@ -167,10 +166,10 @@ co_school_joined <- left_join(colorado_school,
 #from mealcount.r
 
 
-
-library(lubridate)
-library(forcats)
-library(tidyverse)
+# 
+# library(lubridate)
+# library(forcats)
+# library(tidyverse)
 
 # Import the monthly meal count data to see what is looks like
 meal_count_excel <- paste0("C:/Users/CHerr/OneDrive/Documents/CDEMapping",
@@ -235,8 +234,8 @@ monthly_meal_count %>%
 
 
 # four_day
-library(tidyverse)
-library(readxl)
+# library(tidyverse)
+# library(readxl)
 
 directory_four_day <- list.dirs("./data/four_day")
 list.dirs("./data/")
@@ -300,13 +299,29 @@ score_four_day <- mutate(sum_mutate_four_day, score_4day = case_when(
 # Meal counting importing
 
 # Import all the meal counts AHH so many observations!
-library(gsubfn)
-library(readxl)
-library(tidyverse)
-library(dplyr)
-library(stringr)
-library(lubridate)
+# library(gsubfn)
+# library(readxl)
+# library(tidyverse)
+# library(dplyr)
+# library(stringr)
+# library(lubridate)
 
+# need to change meal type from breakfast/lunch/snack/milk to abbrev
+# needs to be done to the overall starting point eventually but can start here
+rename_meal_types <-  function(variable){case_when(
+  variable == "Breakfast" ~"SBP",
+  variable == "Lunch" ~"NSLP", 
+  variable ==  "Snack" ~"ASP",
+  variable == "Milk" ~"SMP")
+}
+
+
+# Function for doing a month and specific meal type from a dataframe      
+Make_Monthly <- function(df, needed_months, meal_types){
+  filter(df,
+         claim_month == needed_months &
+           meal_type == meal_types)
+}
 
 list.files("./data/meal_count", pattern = "^SY")
 meal_count_directory <-  "./data/meal_count/"
@@ -344,7 +359,7 @@ import_meal_count <-lapply(count_files,
 huge_meal_count <- bind_rows(import_meal_count) %>% 
   filter(!is.na(sfa_num))
 
-
+rm(import_meal_count)
 # creates the sfa num format and site number needed for matching 0000
 # creates the school year for the claim.  
 district_meal_count <- mutate(huge_meal_count, 
@@ -355,30 +370,95 @@ district_meal_count <- mutate(huge_meal_count,
                               claim_year = year(claim_date),
                               claim_month = month(claim_date),
                               school_year = year(claim_date) + 
-                                (month(claim_date) <= 7)
-)
+                                (month(claim_date) <= 7),
+                              meal_type = rename_meal_types(meal_type))
 
 
+# remove and reorder a number of un-needed variables
+district_meal_count <- select(district_meal_count, sfa_num_char, site_num_char, 
+                              school_year, meal_type,
+                              everything(), -sfa_num, -site_num, 
+                              -claim_date, -earning_type,
+                              -claim_year)
+
+# Take the monthly claims into a yearly claim
 by_month <- group_by(district_meal_count, school_year,
                      claim_month, sfa_num_char, site_num_char, meal_type ) %>% 
   summarize(total_meals = sum(total_meals_served),
             total_days = sum(count_days_served),
             adp_average = total_meals/total_days)
 
+# makes a df with district/year/mealtype
 by_district <- group_by(district_meal_count,
                         school_year, 
-                        claim_month,
                         sfa_num_char,
                         meal_type) %>% 
   summarize(total_meals = sum(total_meals_served),
             total_days = sum(count_days_served),
             adp_average = total_meals/total_days)
+by_district_17 <- filter(by_district, school_year == 2017)
 
-ggplot(data = by_district) +
-  geom_point(mapping=aes(x = claim_month, y = adp_average), position = "jitter")
+#testing mapping
+testing_99 <-  left_join(combined_geo_dist, by_district_17,
+                         by = c("CDE_AGREEMENT" = "sfa_num_char"))
 
-na_count <-sapply(by_month, function(y) sum(length(which(is.na(y)))))
-na_count <- data.frame(na_count)
+# Makes a df with sites/year/meal
+by_site <- group_by(district_meal_count,
+                    school_year,
+                    sfa_num_char, 
+                    site_num_char,
+                    meal_type) %>% 
+  summarize(total_meals = sum(total_meals_served),
+            total_days = sum(count_days_served),
+            adp_average = total_meals/total_days) 
+
+
+
+# May want to filter specific year out
+#filter(between(school_year, 2016, 2018))
+
+#   
+# testing_maple <- district_meal_count %>% 
+#   filter(sfa_num_char == "0010") %>% 
+#   group_by(school_year,
+#            sfa_num_char, 
+#            site_num_char,
+#            meal_type) %>% 
+#   summarize(total_meals = sum(total_meals_served),
+#             total_days = sum(count_days_served),
+#             adp_average = total_meals/total_days) 
+# testing_maple_count <- filter(raw_student_count, 
+#                               sfa_num == "0010")
+# 
+# testing_maple_join <- left_join(testing_maple_count, testing_maple, 
+#                        by = c("school_year_num" = "school_year", 
+#                               "site_num" = "site_num_char", 
+#                               "meal_type", 
+#                               "sfa_num" = "sfa_num_char" )) 
+# 
+# filter(testing_maple_join, site_num == "0503")
+# filter(by_site, site_num == "0503")
+
+# testing_5$total_meals <- sort(testing_5$total_meals, na.last = FALSE)
+
+
+
+# Join by school year, site_number and meal type
+# # testing_5 <- left_join(raw_student_count, by_site, 
+#                        by = c("school_year_num" = "school_year", 
+#                               "site_num" = "site_num_char", 
+#                               "meal_type", 
+#                               "sfa_num" = "sfa_num_char" )) 
+# 
+# testing_5$total_meals <- sort(testing_5$total_meals, na.last = FALSE)
+
+
+# Scatter plot 
+#ggplot(data = by_district) +
+#  geom_point(mapping=aes(x = claim_month, y = adp_average), position = "jitter")
+
+na_count <-sapply(testing_5, function(y) sum(length(which(is.na(y)))))
+(na_count <- data.frame(na_count))
 range(district_meal_count$claim_month)
 range(district_meal_count$claim_year)
 
@@ -389,7 +469,7 @@ short_by_dist <- filter(by_district,
                         school_year == 2017)
 
 combined_test1 <- left_join(combined_geo_dist, short_by_dist,
-                            by = c("CDE_AGREEMENT" = "sfa_num_char")) 
+                            by = c("CDE_AGREEMENT" = "sfa_num_char", "site_num", "meal_type")) 
 
 january_lunch_by_dist <- filter(combined_test1,
                                 claim_month == 1, 
@@ -424,3 +504,65 @@ plot(january_lunch_by_dist["adp_average"], main = "ADP January")
 districts_plot(january_lunch_by_dist, "lunch_adp_score", "testing")
 
 testing_1 <- Make_Monthly(combined_test1, 3, "Breakfast")
+
+
+# This makes a yearly meal count by program for each district
+yearly_by_district <- group_by(district_meal_count,
+                               school_year, 
+                               sfa_num_char,
+                               meal_type) %>% 
+  summarize(total_meals = sum(total_meals_served),
+            total_days = sum(count_days_served),
+            adp_average = total_meals/total_days,
+            free_meals = sum(free_meals_served),
+            reduced_meals = sum(reduced_meals_served),
+            paid_meals = sum(paid_meals_served)
+        
+                            )
+
+
+# Use the above to make meal scores for each program, I also need to have student count per year
+# Where can I get the student count?
+
+#Get student count yearly as well as F&R yearly between 16-19, start here build older later.
+
+# directory_student_count <- "./data/student_count/"
+# file_student_count <- list.files(directory_student_count)
+# 
+# column_names_student_count <- c("text" = "school_year",
+#                                 "text" = "sfa_num",
+#                                 "text" = "sfa_name", 
+#                                 "text" = "site_num",
+#                                 "text" ="site_name",
+#                                 "text" ="meal_type",
+#                                 "numeric" = "pk_12_enrollment",
+#                                 "text" = "free_perc",
+#                                 "text" = "redu_perc",
+#                                 "text" = "free_and_redu_perc",
+#                                 "text" = "four_day",
+#                                 "text" = "county",
+#                                 "text" = "urban_rural")
+# read_excel(paste0(directory_student_count, file_student_count))
+
+# All the above is already input via four_day comes in as import_four_day
+
+raw_student_count <- select(imported_four_day,
+                            school_year:site_name, 
+                            meal_type:redu_perc) %>% 
+  filter( !is.na(pk_12_enrollment)) %>% 
+  mutate(school_year_num = SY_YY_XX(raw_student_count$school_year))
+
+
+# need to convert SYXXYY to 20XX
+# need to get each years program numbers
+   
+# function to change SY1011 to 2010 (as.numeric)
+SY_YY_XX <- function(variable) {
+  str_replace(variable, "^SY", "") %>%            
+    str_remove(pattern = "\\d\\d$") %>% 
+    as.numeric() + 2000
+    
+}
+left_join(raw_student_count,by_district, by = )
+
+        

@@ -119,9 +119,16 @@ districts_plot <- function(df, variable, map_title){
   plot(df[variable], main = map_title)
 }
 
-plot(january_lunch_by_dist["adp_per_stud"], main = "ADP per student January")
+plot(january_lunch_by_dist["lunch_adp_score"], main = "ADP per student January")
 plot(january_lunch_by_dist["adp_average"], main = "ADP January")
 
 districts_plot(january_lunch_by_dist, "adp_per_stud", "testing")
 
 testing_1 <- Make_Monthly(combined_test1, 3, "Breakfast")
+
+
+# Need to make yearly meal count by districts
+
+# Steps take each school combine all meal counts for all month for each program
+# Combine all the schools into meal counts for each program for the district
+# Do this by school district
