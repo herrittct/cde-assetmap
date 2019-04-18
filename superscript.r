@@ -36,19 +36,11 @@ library(forcats)
 # https://s3.amazonaws.com/assets.datacamp.com/production/course_6839/slides/chapter4.pdf
 
 
-# 
-# library(tigris)
-# library(RQGIS)
-# library(tidycensus)
-# library(sf)
-# library(dplyr)
-# library(lwgeom)
-# library(stringr)
 options(tigris_class = "sf")
 tigris_use_cache = TRUE
 apikey <- "69d8405e34b271517d234dcd4689e8df75836eff"
 
-
+# this is a stand in for census variables 
 colorado_income <- get_acs(geography = "school district (unified)",
                            variables = "B19013_001",
                            state = "CO", key = apikey)
@@ -62,23 +54,6 @@ co_school_joined <- left_join(colorado_school,
                               by = "GEOID")
 
 
-# Plot out using GIS all the different SFAs with whatever data we want to show
-
-
-
-#plot(super_df["free_perc"], main="Percentage Free Students")
-#plot(super_df["redu_perc"], main= "Percentage Reduced Students")
-#plot(super_df["free_and_red_perc"], main= "Percentage Free or Reduced")
-#plot(super_df["sbp"], main= "Has School Breakfast Program")
-#plot(super_df["day4"], main= "Has 4 day school week")
-#plot(super_df["sfsp"], main = "Has sfsp")
-#plot(super_df["smp"], main = "Has Special Milk Progam")
-#plot(super_df["nslp"], main = "Has NSLP")
-#plot(super_df["snack"], main= "Has Afterschool Snack Program")
-#plot(super_df["student_count"], main= "Number of Students")
-
-# What I need to work on is taking the names apart and trying to match them automatically
-# Create a new variable in profiles from the geoID so that all the districts match
 
 
 
@@ -88,12 +63,10 @@ co_school_joined <- left_join(colorado_school,
 # From import.r
 
 # get the sfa profiles from excel sheet 
-# library(readxl)
-# library(tidyverse)
-# library(dplyr)
-# library(stringr)
-
 # Get the CDE provided spreadsheet into R
+
+# really should do this like I have on the otherones with a named list
+# then import from there but that is not a priority today
 
 profiles <- read_excel("./data/blueprint_designed/SFA_profile_Feb_2019.xls", 
                        col_types = c("text", "text", "text","logical", 
@@ -238,9 +211,6 @@ monthly_meal_count %>%
 # library(readxl)
 
 directory_four_day <- list.dirs("./data/four_day")
-list.dirs("./data/")
-list.dirs("./data/four_day")
-list.files("./data/four_day")
 file_four_day <- list.files("./data/four_day")
 path_four_day <- paste0(directory_four_day,"/", file_four_day)
 
@@ -457,10 +427,10 @@ by_site <- group_by(district_meal_count,
 #ggplot(data = by_district) +
 #  geom_point(mapping=aes(x = claim_month, y = adp_average), position = "jitter")
 
-na_count <-sapply(testing_5, function(y) sum(length(which(is.na(y)))))
-(na_count <- data.frame(na_count))
-range(district_meal_count$claim_month)
-range(district_meal_count$claim_year)
+# na_count <-sapply(testing_5, function(y) sum(length(which(is.na(y)))))
+# (na_count <- data.frame(na_count))
+# range(district_meal_count$claim_month)
+# range(district_meal_count$claim_year)
 
 # i want to take each month for each district and map the adp for 15-18 
 # steps to do that connect by_district with geometry
@@ -563,6 +533,6 @@ SY_YY_XX <- function(variable) {
     as.numeric() + 2000
     
 }
-left_join(raw_student_count,by_district, by = )
+# left_join(raw_student_count,by_district, by = )
 
         

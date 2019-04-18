@@ -3,7 +3,7 @@ library(leaflet)
 library(ggmap)
 
 
-geo
+
 base_colorado_map <- leaflet(options = 
                                leafletOptions(minZoom = 6, dragging = TRUE)) %>%
   st_transform(crs = "+init=epsg:4326") %>% 
@@ -140,8 +140,7 @@ combined_sfsp_geodist_popups <- paste0("District Name: ", combined_sfsp_geodist$
 
 sfsp_pal <- colorNumeric(palette = "plasma", 
                                 domain = combined_sfsp_geodist$adp_sfsp_2017)
-
-combined_sfsp_geodist %>% 
+m <- combined_sfsp_geodist %>% 
   st_transform(crs = "+init=epsg:4326") %>% 
   leaflet() %>% 
   addProviderTiles("Esri.WorldGrayCanvas") %>% 
@@ -157,3 +156,5 @@ combined_sfsp_geodist %>%
             values = ~ adp_sfsp_2017,
             title = "adp_sfsp_2017",
             opacity = 1)
+
+saveWidget(m, "mapsfsp.html", selfcontained = FALSE)
