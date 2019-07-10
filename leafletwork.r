@@ -4,13 +4,14 @@ library(ggmap)
 
 
 
-base_colorado_map <- leaflet(options = 
+base_colorado_map <- raw_shapes %>% 
+   st_transform(crs = "+init=epsg:4326") %>% 
+  leaflet(options = 
                                leafletOptions(minZoom = 6, dragging = TRUE)) %>%
-  st_transform(crs = "+init=epsg:4326") %>% 
-  addProviderTiles("Esri.WorldGrayCanvas") %>% 
+   addProviderTiles("Esri.WorldGrayCanvas") %>% 
   setView(lng = -106, lat = 39.6, zoom = 7) %>% 
-  addPolygons(data = short_co_schools,
-              fillColor = ~pal(percent),
+  addPolygons(data = raw_shapes,
+              fillColor = "blue",
               color =  "#b2aeae",
               fillOpacity = 0.7,
               weight =  1,
@@ -158,3 +159,5 @@ m <- combined_sfsp_geodist %>%
             opacity = 1)
 
 saveWidget(m, "mapsfsp.html", selfcontained = FALSE)
+
+

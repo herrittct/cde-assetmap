@@ -16,7 +16,11 @@ apikey <- "69d8405e34b271517d234dcd4689e8df75836eff"
 
 
 colorado_income <- get_acs(geography = "school district (unified)",
-                           variables = "B19013_001",
+                           variables = "B19013_001","B09010",
+                           state = "CO", key = apikey)
+
+colorado_income <- get_acs(geography = "school district (unified)",
+                           variables = "B09010",
                            state = "CO", key = apikey)
 
 colorado_school <- school_districts(state = "CO",
