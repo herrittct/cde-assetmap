@@ -1,0 +1,6 @@
+"0"," district_meal_count %>% "
+"0","  group_by(sfa_num_char) %>% "
+"0","  ggplot() +"
+"0","  geom_point(aes(y = total_meals_served, x = claim_date), position = ""jitter"") +"
+"0","  facet_wrap(~rate_level, nrow = 2) +"
+"0","  geom_smooth(aes(y = total_meals_served, x = claim_date))"

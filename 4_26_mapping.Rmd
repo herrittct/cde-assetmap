@@ -1,0 +1,76 @@
+---
+title: "CDE Mapping"
+author: "Cameron"
+date: "4/26/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+source("./cde_mapping_full.r")
+```
+
+## Testing Plotting
+```{r Score Map, echo=FALSE}
+score_pal <- colorNumeric(palette = "inferno",
+                            domain = testing_99[["total_score"]])
+
+score_popup <-  paste0(
+    "District Name: ",
+    testing_99[["NAME"]],  "<br>",
+    "Score: ",
+    round(testing_99[["total_score"]], digits = 3), "<br>",
+    "Free and Reduced Percent: ",
+    round(testing_99[["Scored_eligibility.y"]], digits = 3), "<br>",
+     "Total program score:  ",
+    round(testing_99[["Scored_adp"]], digits = 3),  "<br>",
+    "Rural/Urban Score:  ",
+    testing_99[["Scored_rural_urban"]], "<br>",
+    "District size Score: ",
+    testing_99[["Scored_district_size"]], "<br>",
+    "Four Day Score: ",
+    testing_99[["score_4day"]], "<br>",
+    "CEP Score: ", testing_99[["cep_score"]])
+ 
+ 
+ 
+  leaflet(testing_99, width = "75%", height = "75%") %>%
+    addProviderTiles("Stamen.TonerLite", group = "Stamen.Toner") %>%
+    addPolygons(weight = 1,
+                group = "Score",
+                stroke = TRUE,
+                smoothFactor = 1,
+                fillOpacity = 0.25,
+                color = ~ score_pal(total_score),
+                popup = score_popup)  %>%
+    addLegend(pal = score_pal,
+              values = ~total_score) #%>% 
+
+library(htmlwidgets)
+ library(htmltools)
+
+tag.map.title <- tags$style(HTML("
+  .leaflet-control.map-title { 
+    transform: translate(-50%,20%);
+    position: fixed !important;
+    left: 50%;
+    text-align: center;
+    padding-left: 10px; 
+    padding-right: 10px; 
+    background: rgba(255,255,255,0.75);
+    font-weight: bold;
+    font-size: 28px;
+  }
+"))
+
+title <- tags$div(
+  tag.map.title, HTML("Map title")
+)  
+
+map_leaflet <- leaflet(testing_99) %>%
+  addTiles() %>%
+  addControl(title, position = "topleft", className="map-title")
+    
+```
+
+
+

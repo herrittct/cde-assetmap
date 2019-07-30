@@ -1,0 +1,9 @@
+{
+    "path" : "~/CDEMapping/cde-assetmap",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}

@@ -1,0 +1,8 @@
+"0","ggplot(data = by_month) +"
+"0","  geom_point(mapping=aes(x = claim_month,"
+"0","                         y = adp_average), position = ""jitter"") +"
+"0","  labs("
+"0","    title = ""District ADP average by month 2010-2019"","
+"0","    x = ""Claim Month"","
+"0","    y = ""Average ADP"""
+"0","  )"

@@ -1,0 +1,122 @@
+"0","knitr::opts_chunk$set(echo = TRUE)"
+"0","library(tidyverse)"
+"2","[30m-- [1mAttaching packages[22m --------------------------------------- tidyverse 1.2.1 --[39m
+"
+"2","[30m[32mv[30m [34mggplot2[30m 3.1.1       [32mv[30m [34mpurrr  [30m 0.3.2  
+[32mv[30m [34mtibble [30m 2.1.1       [32mv[30m [34mdplyr  [30m 0.8.0.[31m1[30m
+[32mv[30m [34mtidyr  [30m 0.8.3       [32mv[30m [34mstringr[30m 1.4.0  
+[32mv[30m [34mreadr  [30m 1.3.1       [32mv[30m [34mforcats[30m 0.4.0  [39m
+"
+"2","[30m-- [1mConflicts[22m ------------------------------------------ tidyverse_conflicts() --
+[31mx[30m [34mdplyr[30m::[32mfilter()[30m masks [34mstats[30m::filter()
+[31mx[30m [34mdplyr[30m::[32mlag()[30m    masks [34mstats[30m::lag()[39m
+"
+"0","library(proto)"
+"0","library(gsubfn)"
+"0","library(readxl)"
+"0","library(dplyr)"
+"0","library(stringr)"
+"0","library(lubridate)"
+"2","
+Attaching package: ‘lubridate’
+
+"
+"2","The following object is masked from ‘package:base’:
+
+    date
+
+"
+"0","library(tigris)"
+"2","To enable 
+caching of data, set `options(tigris_use_cache = TRUE)` in your R script or .Rprofile.
+"
+"2","
+Attaching package: ‘tigris’
+
+"
+"2","The following object is masked from ‘package:graphics’:
+
+    plot
+
+"
+"0","library(reticulate)"
+"0","library(RQGIS)"
+"0","library(tidycensus)"
+"0","library(sf)"
+"2","Linking to GEOS 3.6.1, GDAL 2.2.3, PROJ 4.9.3
+"
+"0","library(lwgeom)"
+"2","Linking to liblwgeom 2.5.0dev r16016, GEOS 3.6.1, PROJ 4.9.3
+"
+"0","library(forcats)"
+"0","library(leaflet)"
+"0","library(ggmap)"
+"2","Google's Terms of Service: https://cloud.google.com/maps-platform/terms/.
+"
+"2","Please cite ggmap if you use it! See citation(""ggmap"") for details.
+"
+"0","library(curl)"
+"2","
+Attaching package: ‘curl’
+
+"
+"2","The following object is masked from ‘package:readr’:
+
+    parse_date
+
+"
+"0","options(tigris_class = ""sf"")"
+"0","tigris_use_cache = TRUE"
+"0","apikey <- ""69d8405e34b271517d234dcd4689e8df75836eff"""
+"0",""
+"0","# Functions"
+"0",""
+"0","# need to change meal type from breakfast/lunch/snack/milk to abbrev"
+"0",""
+"0","rename_meal_types <-  function(variable){case_when("
+"0","  variable == ""Breakfast"" ~""SBP"","
+"0","  variable == ""Lunch"" ~""NSLP"", "
+"0","  variable ==  ""Snack"" ~""ASP"","
+"0","  variable == ""Milk"" ~""SMP"")"
+"0","}"
+"0",""
+"0",""
+"0","# Function for doing a month and specific meal type from a dataframe      "
+"0","Make_Monthly <- function(df, needed_months, meal_types){"
+"0","  filter(df,"
+"0","         claim_month == needed_months &"
+"0","           meal_type == meal_types)"
+"0","}"
+"0","# Make a plot by variable and map title"
+"0","districts_plot <- function(df, variable, map_title){"
+"0","  plot(df[variable], main = map_title)"
+"0","}"
+"0",""
+"0",""
+"0","   "
+"0","# function to change SY1011 to 2010 (as.numeric)"
+"0","SY_YY_XX <- function(variable) {"
+"0","  str_replace(variable, ""^SY"", """") %>%            "
+"0","    str_remove(pattern = ""\\d\\d$"") %>% "
+"0","    as.numeric() + 2000"
+"0","}"
+"0",""
+"0","Score_District_Size <- function(size_variable){"
+"0","  case_when("
+"0","  size_variable < 50 ~0.33,"
+"0","	 between(size_variable, 51, 500) ~0.67,"
+"0","	between(size_variable, 501, 1000) ~1,"
+"0","	between(size_variable, 1001, 5000) ~1.34,"
+"0","	between(size_variable, 5001, 10000) ~1.67,"
+"0","	size_variable > 10000 ~2)"
+"0","  "
+"0","}"
+"0",""
+"0","Pad_to_character <-  function(input_variable){"
+"0","  str_pad(input_variable, width = 4, "
+"0","          side = ""left"", pad = ""0"")}"
+"0",""
+"0","# na_count <-sapply(final_district_dataframe, function(y) sum(length(which(is.na(y)))))"
+"0","# (na_count <- data.frame(na_count))"
+"0","# range(district_meal_count$claim_month)"
+"0","# range(district_meal_count$claim_year)"

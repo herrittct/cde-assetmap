@@ -1,0 +1,11 @@
+"0","working_student_count <- group_by(raw_student_count, 
+                                  sfa_num, school_year_num) %>% 
+  summarize(pk_12_enrollment_total = sum(pk_12_enrollment),
+            free_perc = mean(free_perc),
+            redu_perc = mean(redu_perc),
+            district_size_score = Score_District_Size(pk_12_enrollment_total),
+            district_size_quartile = ntile(pk_12_enrollment_total/cumsum(pk_12_enrollment_total)))
+"
+"2","Error in ntile(pk_12_enrollment_total/cumsum(pk_12_enrollment_total)) : 
+  argument ""n"" is missing, with no default
+"

@@ -1,0 +1,48 @@
+---
+title: "Leaflet"
+author: "Cameron"
+date: "April 16, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(leaflet)
+library(ggmap)
+library(tidyverse)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+source("./superscript.r")
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+testing_99 %>% 
+  st_transform(crs = "+init=epsg:4326") %>% 
+  leaflet() %>%
+  addProviderTiles(provider = "CartoDB.Positron") %>%
+  addPolygons(popup = popup_testing99,
+              stroke = FALSE,
+              smoothFactor = 0,
+              fillOpacity = 0.6,
+              color = ~ pal3(student_count),
+              highlightOptions = highlightOptions(color = "white", weight = 2,
+                                                  bringToFront = TRUE)) %>%
+  addLegend("bottomright", 
+            pal = pal3, 
+            values = ~ student_count,
+            title = "Student Count",
+            opacity = 1)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
