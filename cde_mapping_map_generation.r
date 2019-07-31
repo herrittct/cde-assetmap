@@ -144,12 +144,6 @@ mapping_profiles %>%
         geom_histogram(aes(x = Scored_adp)) +
         facet_grid(~urban_rural) 
 
-# geom_histogram(mapping = aes(x = score_4day)) +
-#         facet_grid(~urban_rural) +
-# geom_point(mapping = aes(x = Scored_rural_urban , y = sbp), position = "jitter") +
-#         facet_grid(~urban_rural)
-        
-        
 mapping_profiles %>% 
         filter(school_year == 2017) %>% 
         ggplot() +
@@ -170,14 +164,13 @@ mapping_profiles %>%
         facet_wrap(~ifelse(nslp_sbp_asp_sfsp,
                            "Has All Four Programs",
                            "Does Not Have All Programs")) + 
-        labs(title = "Figure 1. Public School Districts Currently Operating All Four \nKey Programs Compared to Scored District Size",
+        labs(title = "Public School Districts Currently Operating All Four \nKey Programs Compared to Scored District Size",
              subtitle = "Key Programs: NSLP, SBP, ASP, SFSP.\nOperating in at least 1 school",
              x = "District Size score",
              y = "Number of Districts",
              caption = " Based on 2017 data") +
         theme_minimal() +
         theme(plot.title = element_text(size = 20, face = "bold"))
-
 
 mapping_profiles %>% 
         filter(school_year == 2016) %>% 
@@ -209,21 +202,18 @@ mapping_profiles %>%
         geom_histogram(aes(x = urban_rural), stat = "count") +
         facet_wrap(~snack)
 
-
 mapping_profiles %>% 
         filter(school_year == 2016) %>% 
         map_data() %>% 
         ggplot() +
         geom_map(aes(fill = score_4day))
 
-
-
 mapping_profiles %>%
         filter(school_year == 2017) %>% 
         ggplot() + 
         geom_sf(aes(fill = nslp_sbp_asp_sfsp)) +
         labs(caption = " Based on 2017 data") +
-        ggtitle(label = "Figure 2. Public School Districts Currently\nOperating All Four Key Programs",
+        ggtitle(label = "Public School Districts Currently\nOperating All Four Key Programs",
                 subtitle = "Key Programs: NSLP, SBP, ASP, SFSP.\nOperating in at least 1 school") +
         guides(fill = guide_legend( title = "Has All Four \nPrimary Programs",
                                     title.theme = element_text(
@@ -238,41 +228,7 @@ mapping_profiles %>%
         
 
         
-# Testing for all the final CDE Maps
-
-mapping_profiles["nslp_sbp_asp_sfsp"], main = "Has NSLP & SBP & ASP & SFSP"
-
-# # plot(mapping_profiles["free_percent"], main="Percentage Free Students") +
-# #         legend(x = "bottom", legend = "", title = "Percentage of Students eligible for free meals")        
-# # plot(mapping_profiles["reduced_percent"], main= "Percentage Reduced Students")+
-# #         legend(x = "bottom", legend = "", title = "Percentage of Students eligible for reduced price meals")  
-# plot(mapping_profiles["Scored_eligibility.y"], main= "Percentage Free or Reduced") +
-#         legend(x = "bottom", legend = "", title = "Percentage of Students eligible for free OR reduced price meals")  
-# plot(mapping_profiles["sbp"], main= "Has School Breakfast Program") +
-#         legend(x = "top", legend = "", title = "Has an active School breakfast program in at least one school")  
-# plot(mapping_profiles["score_4day"], main= "Has 4 day school week") +
-#         legend(x = "bottom", horiz = TRUE, legend = c( "4 Day is Blue", "5 Day is Yellow"))
-# plot(mapping_profiles["sfsp"], main = "Has sfsp") +
-#         legend(x = "top",  legend = "Has an active Summer food Service \n program in at least one school") 
-# # plot(mapping_profiles["smp"], main = "Has Special Milk Progam") +
-# #         legend(x = "top",  legend = "Has an active Special Milk Program \n in at least one school")
-# # plot(mapping_profiles["nslp"], main = "Has NSLP") +
-# #         legend(x = "top",  legend = "Has an active National School Lunch Program \n in at least one school")
-# plot(mapping_profiles["snack"], main= "Has Afterschool Snack Program") +
-#         legend(x = "top",  legend = "Has an active Afterschool Snack Program \n in at least one school")
-# # plot(mapping_profiles["District_population"], main= "Number of Students") +
-# #         legend(x = "top",  legend = "District Size by number of students")
-# plot(mapping_profiles["Scored_district_size"], main = "District Size Score") +
-#         legend(x = "top",  legend = "District Size score according to size cutoffs")
-
-asp_mapping <- c("Title" = " After School Snack Program (ASP) Participation (YEAR)",
-                "Subtitle" = "Has Afterschool Snack Program in at least one school in stated year",
-                "Data Source" = "",
-                "Year" = "")
-        
-test <- c("Title" = "After School Snack Program (ASP) Participation (YEAR)")
-
-
+#Final CDE Maps
 size_vectors_2 <- c( "<50" = 0.33,
                      "51-500" = 0.67, 
                      "501-1000" = 1, 
@@ -285,7 +241,7 @@ mapping_profiles_levels <- mapping_profiles %>%
                                              ordered = TRUE, 
                                              levels = size_vectors_2))
 
-# All 4 Programs 
+# District has all 4 Child Nutrition Programs 
 mapping_profiles %>%
         filter(school_year == 2017) %>% 
         ggplot() + 
@@ -304,7 +260,7 @@ mapping_profiles %>%
               rect = element_blank(),
               panel.grid.major = element_line(colour = 'transparent')) 
 
-# Urban / Rural Map
+# District is considered Urban / Rural Map
 mapping_profiles %>%
         filter(school_year == 2017) %>% 
         ggplot() + 
@@ -345,7 +301,6 @@ mapping_profiles %>%
               panel.grid.major = element_line(colour = 'transparent')) 
 
 # Free Reduced Map 2017
-#mapping_profiles_levels_testing %>%
 mapping_profiles %>%
         filter(school_year == 2017) %>% 
         ggplot() + 
@@ -367,7 +322,7 @@ mapping_profiles %>%
 
 
 # Free Reduced Map 2016
-mapping_profiles_levels_testing %>%
+mapping_profiles_levels %>%
         filter(school_year == 2016) %>% 
         ggplot() + 
         geom_sf(aes(fill = Scored_eligibility.y)) +
@@ -388,12 +343,12 @@ mapping_profiles_levels_testing %>%
 
 
 # SBP Participation 2017
-mapping_profiles_levels_testing %>%
+mapping_profiles_levels %>%
         filter(school_year == 2017) %>% 
         ggplot() + 
         geom_sf(aes(fill = sbp)) +
         labs(caption = " Based on 2017-2018 data") +
-        ggtitle(label = "School Breakfast Program Participation (2017) ",
+        ggtitle(label = "School Breakfast Program \nParticipation (2017) ",
                 subtitle = "At least one school Participates in SBP") +
         guides(fill = guide_legend( title = "School Breakfast \nProgram Participation",
                                     title.theme = element_text(
@@ -408,7 +363,7 @@ mapping_profiles_levels_testing %>%
               panel.grid.major = element_line(colour = 'transparent')) 
 
 # SFSP Participation 2017
-mapping_profiles_levels_testing %>%
+mapping_profiles_levels %>%
         filter(school_year == 2017) %>% 
         ggplot() + 
         geom_sf(aes(fill = sfsp)) +
@@ -426,7 +381,6 @@ mapping_profiles_levels_testing %>%
               axis.ticks = element_blank(),
               rect = element_blank(),
               panel.grid.major = element_line(colour = 'transparent')) 
-
 
 # ASP Participation 2017
 mapping_profiles %>%
@@ -469,7 +423,7 @@ mapping_profiles %>%
               panel.grid.major = element_line(colour = 'transparent')) 
 
 # CEP Partitcipation 2017
-mapping_profiles_levels_testing %>%
+mapping_profiles_levels %>%
         filter(school_year == 2017) %>% 
         mutate(cep_score_char = paste0(round(cep_score,2)*100,"%")) %>% 
         ggplot() + 
