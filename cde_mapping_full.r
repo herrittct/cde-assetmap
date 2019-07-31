@@ -94,19 +94,14 @@ district_adp <-  scored_adp_programs %>%
             district_population = mean(district_population),
             Scored_eligibility = mean(Scored_eligibility))
 
-
-
-
-
 testing_complete_join <- left_join(combined_geo_district,
-          district_adp,
-          by = c("sfa_num", "school_year")) %>%
-  mutate(Scored_district_size = Score_District_Size(district_population),
-         Scored_rural_urban = Score_ruralurban(urban_rural)) %>% 
-  filter(school_year < 2018)
+          district_adp, by = c("sfa_num", "school_year")) %>%
+          mutate(Scored_district_size = Score_District_Size(district_population.x),
+          Scored_rural_urban = Score_ruralurban(urban_rural)) %>% 
+          filter(school_year < 2018)
 
 
-testing_99 <- testing_complete_join %>% 
+ testing_99 <- testing_complete_join %>% 
   group_by(school_year, sfa_num) %>% 
   mutate(total_score = sum(c(cep_score,
                              score_4day,

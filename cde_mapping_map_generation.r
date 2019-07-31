@@ -73,6 +73,8 @@ mapping_profiles_popup_score_components <- paste0("District Name: ", mapping_pro
 total_score_pal <- colorNumeric(palette = "plasma", 
                                 domain = mapping_profiles[["total_score"]])
 
+isp_pal <- colorNumeric(palette = "plasma", 
+                        domain = mapping_profiles$isp_district*100)
 
 # Actual Leaflet Map
 
@@ -132,7 +134,7 @@ score_cep_leaflet <-
 
 # Make into an html widget
 htmlwidgets::saveWidget(score_cep_leaflet,
-                          file = "Capstone.html", 
+                          file = "Totalscore_CEP_Programs-leaflet.html", 
                           selfcontained= TRUE)
 
 ### Plots of different variables
@@ -140,11 +142,12 @@ mapping_profiles %>%
         filter(school_year == 2017) %>% 
         ggplot() +
         geom_histogram(aes(x = Scored_adp)) +
-        facet_grid(~urban_rural)
-geom_histogram(mapping = aes(x = score_4day)) +
-        facet_grid(~urban_rural)
-geom_point(mapping = aes(x = Scored_rural_urban , y = sbp), position = "jitter") +
-        facet_grid(~urban_rural)
+        facet_grid(~urban_rural) 
+
+# geom_histogram(mapping = aes(x = score_4day)) +
+#         facet_grid(~urban_rural) +
+# geom_point(mapping = aes(x = Scored_rural_urban , y = sbp), position = "jitter") +
+#         facet_grid(~urban_rural)
         
         
 mapping_profiles %>% 
@@ -233,16 +236,9 @@ mapping_profiles %>%
               rect = element_blank(),
               panel.grid.major = element_line(colour = 'transparent')) 
         
-mapping_profiles %>% 
-        ggplot()+
-        geom_sf() +
-        theme_void()
-        guide_legend(title = "Has All Four \nPrimary Programs")
+
         
-map.test       
-        legend(legend = nslp_sbp_asp_sfsp, title = "Has All Four Primary Programs")
-####
-        # Testing for all the final CDE Maps
+# Testing for all the final CDE Maps
 
 mapping_profiles["nslp_sbp_asp_sfsp"], main = "Has NSLP & SBP & ASP & SFSP"
 
@@ -276,6 +272,18 @@ asp_mapping <- c("Title" = " After School Snack Program (ASP) Participation (YEA
         
 test <- c("Title" = "After School Snack Program (ASP) Participation (YEAR)")
 
+
+size_vectors_2 <- c( "<50" = 0.33,
+                     "51-500" = 0.67, 
+                     "501-1000" = 1, 
+                     "1001-5000" = 1.34,
+                     "5001-10000" = 1.67,
+                     ">10000" = 2)  
+
+mapping_profiles_levels <- mapping_profiles %>% 
+        mutate(Scored_district_size = factor(Scored_district_size, 
+                                             ordered = TRUE, 
+                                             levels = size_vectors_2))
 
 # All 4 Programs 
 mapping_profiles %>%
@@ -315,7 +323,6 @@ mapping_profiles %>%
               rect = element_blank(),
               panel.grid.major = element_line(colour = 'transparent')) 
 
-
 # Four Day School Week Map
 mapping_profiles %>%
         filter(school_year == 2017) %>% 
@@ -337,11 +344,9 @@ mapping_profiles %>%
               rect = element_blank(),
               panel.grid.major = element_line(colour = 'transparent')) 
 
-
-
-
 # Free Reduced Map 2017
-mapping_profiles_levels_testing %>%
+#mapping_profiles_levels_testing %>%
+mapping_profiles %>%
         filter(school_year == 2017) %>% 
         ggplot() + 
         geom_sf(aes(fill = Scored_eligibility.y)) +
@@ -424,7 +429,7 @@ mapping_profiles_levels_testing %>%
 
 
 # ASP Participation 2017
-mapping_profiles_levels_testing %>%
+mapping_profiles %>%
         filter(school_year == 2017) %>% 
         ggplot() + 
         geom_sf(aes(fill = snack)) +
@@ -444,7 +449,7 @@ mapping_profiles_levels_testing %>%
               panel.grid.major = element_line(colour = 'transparent')) 
 
 # CEP Eligible 2017
-mapping_profiles_levels_testing %>%
+mapping_profiles %>%
         filter(school_year == 2017) %>% 
         ggplot() + 
         geom_sf(aes(fill = cep_eligible_district)) +
@@ -484,26 +489,9 @@ mapping_profiles_levels_testing %>%
               rect = element_blank(),
               panel.grid.major = element_line(colour = 'transparent')) 
 
-size_vectors <- c("<50", "51-500","501-1000", "1001-5000", "5001-10000", ">10000" )  
-size_vectors_2 <- list(0.33= "<50",
-                    0.67 = "51-500", 
-                    1 = "501-1000", 
-                    1.34 = "1001-5000",
-                    1.67 = "5001-10000",
-                    2 = ">10000")  
-
-size_vectors_2 <- c( "<50" = 0.33,
-                       "51-500" = 0.67, 
-                       "501-1000" = 1, 
-                       "1001-5000" = 1.34,
-                       "5001-10000" = 1.67,
-                       ">10000" = 2)  
-
-mapping_profiles_levels_testing <- mapping_profiles %>% 
-        mutate(Scored_district_size = factor(Scored_district_size, ordered = TRUE, levels = size_vectors_2))
 
 # District Size Map
-mapping_profiles_levels_testing %>%
+mapping_profiles_levels %>%
         filter(school_year == 2017) %>% 
         ggplot() + 
         geom_sf(aes(fill = Scored_district_size)) +
