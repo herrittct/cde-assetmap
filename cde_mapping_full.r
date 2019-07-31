@@ -101,7 +101,7 @@ district_adp <-  scored_adp_programs %>%
 testing_complete_join <- left_join(combined_geo_district,
           district_adp,
           by = c("sfa_num", "school_year")) %>%
-  mutate(Scored_district_size = Score_District_Size(District_population),
+  mutate(Scored_district_size = Score_District_Size(district_population),
          Scored_rural_urban = Score_ruralurban(urban_rural)) %>% 
   filter(school_year < 2018)
 

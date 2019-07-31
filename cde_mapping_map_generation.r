@@ -1,6 +1,5 @@
 options(scipen=999)
-register_google(key = "AIzaSyBdIcDr7kneeP9RvZs6Jqo5vhWvHKDaj9o",
-                account_type = "standard")
+
 # All Maps
 
 # #static
