@@ -1,3 +1,115 @@
 # cde-assetmap
 
 This is a project with the Colorado Department of Education School Nutrition Unit, the goal of the project is to utilize available data to establish priority areas for targeted interventions and technical assistance.  
+
+How to use the R Script
+The provided r script (file) is the method for all analysis conducted using the assorted data collected.  The script has many different elements everything from downloading data from online sources, calculating variables, modifying existing variables, and “cleaning” data when needed.  It also completes all analysis and visualization automatically.  For the script to operate successfully there are multiple processes that need to be in place prior to the successful running of the file.  
+1.	The R Program and R Studio program must be installed on the computer conducting the analysis.
+2.	R packages, as described in the cde_install_packages.r script must be installed, and then loaded.
+3.	All data, in the format specified by the data sources document must be installed in the correct subdirectory (folder) as specified in the data sources document. 
+4.	
+Data Sources	
+•	Shape_file18
+o	From the Colorado State Demography Office
+o	https://demography.dola.colorado.gov/CO_SpecialDistrict/
+•	CDE_to_GEOID.xlsx
+o	Built from USDA and CDE data to combine datasets utilizing CDE identifiers for school districts and sites connecting with standard GEOID utilized by the USDA and Census
+o	Built utilizing CDE & Census geographic areas.
+•	Meal counts
+o	http://www.cde.state.co.us/nutrition/datarequestsmealcounts
+o	All data for NSLP, SMP, ASP, SBP meal counting and claiming come from the datasets available
+•	CEP
+o	2017 CEP Annual Notification (note Updated CEP 2019 now available)
+o	http://www.cde.state.co.us/nutrition/communityeligibilityprovision
+•	Profiles- CDE Data Analyst
+o	Provides Rural/Urban classification
+o	Provides Four day school week data
+•	Student Count
+o	Pk-12 Free and Reduced lunch by district and county
+o	2010-2018 school years
+Data Processing
+Programs (Scripts)
+cde_install_packages.r
+•	Must be run the first time on each computer that the program is being operated.  
+•	Installs all the packages that will be loaded in the next script
+cde_library_functions.r
+•	Load all needed data packages for all of the program
+  o	tidyverse
+  o	proto
+  o	gsubfn
+  o	readxl
+  o	dplyr
+  o	stringr
+  o	lubridate
+  o	tigris
+  o	reticulate
+  o	RQGIS
+  o	tidycensus
+  o	sf
+  o	forcats
+  o	leaflet
+  o	ggmap
+  o	curl
+•	Create a number of functions that will be used throughout the programs
+•	All packages must be installed into R before program can run. Do this by running install.packages(“package_name”), this only needs to be completed once. 
+Cde_shape_file_load.r
+•	Load the shapes for the school districts
+cde_meal_counts.r
+•	Load Meal count data from school year 2010-2011 to 2017-2018.  
+•	Data retrieved from http://www.cde.state.co.us/nutrition/datarequestsmealcounts
+•	All school districts with an NA for SFA number were removed
+•	Imports SFSP using data from http://www.cde.state.co.us/nutrition/sfspmealcountinformation
+Cde_fourday.r
+•	Imports sponsor_site_data, data provided by Carrie Thielen 
+•	Removes all N/A pk_12_enrollment
+•	Determines 4 day or 5 day school week
+•	Scores the district with either 0 or 1 point, zero for four day week, one for 5 day week.
+o	Zero partial 4-day school districts identified by sponsor site data 
+Cde_student_count.r
+•	Supply an accurate student count for each district not dependent on participation in CNP
+•	Imports district pk-12th grade student count data from 2010-2011 school year to 2018-2019 school year 
+o	Missing 2016-2017 school year separated free/reduced eligible percentages, CDE available dataset is incomplete. 
+Cde_cep.r
+•	Provides information regarding participation in and eligibility for participation in the community eligibility program CEP.  
+•	Imports CEP data from the Community Eligibility Provision (CEP) Annual Notification of Local Educational Agencies (LEA) 
+o	Download link currently inoperable on the CDE website
+o	http://www.cde.state.co.us/nutrition/osncommunityeligibilityprovisionannualnotivicationleaandschools
+•	Removes all N/A for SFA_Number
+•	Calculates score based on number of students participating in CEP of the total district
+cde_mapping_full.r
+Filters out sfa_name = N/A, sfa_num <7999 (non-publics)
+Combines all previously created data frames and merges into one common data frame while also calculating scoring components, calculating ADP, and reorganizing the order of variables.  The final output is then used to generate maps.  
+cde_mapping_map_generation.r
+Has all the static and interactive(Leaflet) maps coded to they can be repeated and replicated when needed. 
+Interactive maps are more complex and will take extra time to modify for new components, static maps are simpler to make using new components but will take extra steps when updating data, will need to change labels, titles, and filters as needed.  
+Each map is a separate line of code that can be changed and altered as needed.
+Description of currently available data variables
+•	"GEOID" = Universal code for matching school district to geographic location              
+•	"NAME" = School District Name
+•	"sfa_num" = CDE Provided School District Identifier
+•	"cep_score" = Score for CEP, proportion of students covered by CEP, 1 = 100%
+•	"Scored_eligibility.x" = Proportion of students eligible for free or reduced price meals, 1 = 100%, based on CDE data analyst profiles document
+•	"score_4day" = Proportion of schools operating on 4 day school week
+•	"count_schools" = Count of the number of schools operating CNPs
+•	"cep_eligible_district” = True/False District is eligible for CEP based on 40% ISP
+•	"near_eligible_cep_district" = True/False District is near eligible for CEP based on ISP between 30-40%
+•	"isp_district" = Identified Student Percentage as reported on 2017 CEP Annual Notification      
+•	"district_population" = Number of students in school district
+•	"free_percent" = Proportion of students eligible for free meals, 1 = 100%          
+•	"reduced_percent" = Proportion of students eligible for reduced meals, 1 = 100%                 
+•	"school_year" = First year of the school year. Ex. 2018-2019 SY = 2018, School year changes July 1. 
+•	"urban_rural" = Rural or Urban designation based on underlying county                
+•	"Scored_adp" = Average Daily Participation for NSLP, SFSP, SBP, ASP combined
+•	"Scored_eligibility.y" = Proportion of students eligible for free or reduced price meals, 1 = 100%, based on pk_12 yearly CDE report.
+•	"Scored_district_size" = Score based on student population of district, max score 2 for >10000 students  
+•	"Scored_rural_urban" = Score based on rural or urban designation, 0 for rural, 1 for urban
+•	"total_score"  = Sum of all score components          
+•	"sbp" = Has School Breakfast Program in at least one school
+•	"nslp" = Has National School Lunch Program in at least one school
+•	"smp" = Has Special Milk Program in at least one school          
+•	"snack" = Has Afterschool Snack Program in at least one school      
+•	"sfsp"= Has Summer food service Program in at least one site             
+•	"nslp_sbp" = Has both NSLP & SBP in at least one school      
+•	"nslp_sbp_asp" = Has NSLP & SBP & ASP in at least one school      
+•	"nslp_sbp_asp_sfsp" = Has all four key programs (NSLP, SBP, ASP, SFSP) in at least one school      
+•	"geometry" = The shape geometry for each school district which allows us to draw the districts on maps. 

@@ -202,12 +202,6 @@ mapping_profiles %>%
         geom_histogram(aes(x = urban_rural), stat = "count") +
         facet_wrap(~snack)
 
-mapping_profiles %>% 
-        filter(school_year == 2016) %>% 
-        map_data() %>% 
-        ggplot() +
-        geom_map(aes(fill = score_4day))
-
 mapping_profiles %>%
         filter(school_year == 2017) %>% 
         ggplot() + 
@@ -327,7 +321,7 @@ mapping_profiles_levels %>%
         ggplot() + 
         geom_sf(aes(fill = Scored_eligibility.y)) +
         labs(caption = " Based on 2016-2017 data") +
-        ggtitle(label = "Free & Reduced Eligible Student Percentage (2016) ",
+        ggtitle(label = "Free & Reduced Eligible \nStudent Percentage (2016) ",
                 subtitle = "The percentage of students identified as eligible for free or reduced price meals") +
         guides(fill = guide_legend( title = "Free & Reduced \nPrice Eligible",
                                     title.theme = element_text(
@@ -408,7 +402,7 @@ mapping_profiles %>%
         ggplot() + 
         geom_sf(aes(fill = cep_eligible_district)) +
         labs(caption = " Based on 2017-2018 data") +
-        ggtitle(label = "Community Eligiblity Program minimum ISP met (2017) ",
+        ggtitle(label = "Community Eligiblity Program \nminimum ISP met (2017) ",
                 subtitle = "The school district has at least 40% ISP indicating eligiblity for CEP provision") +
         guides(fill = guide_legend( title = "CEP \nProgram Eligibility",
                                     title.theme = element_text(
@@ -422,7 +416,7 @@ mapping_profiles %>%
               rect = element_blank(),
               panel.grid.major = element_line(colour = 'transparent')) 
 
-# CEP Partitcipation 2017
+# CEP Participation 2017
 mapping_profiles_levels %>%
         filter(school_year == 2017) %>% 
         mutate(cep_score_char = paste0(round(cep_score,2)*100,"%")) %>% 
